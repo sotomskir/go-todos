@@ -1,22 +1,23 @@
 package main
 
 import (
-	"github.com/gorilla/mux"
-	"go-contacts/app"
-	"os"
 	"fmt"
+	"github.com/gorilla/mux"
+	"github.com/sotomskir/go-todos/app"
+	"github.com/sotomskir/go-todos/controllers"
 	"net/http"
-	"go-contacts/controllers"
+	"os"
 )
 
 func main() {
 
 	router := mux.NewRouter()
 
-	router.HandleFunc("/api/user/new", controllers.CreateAccount).Methods("POST")
-	router.HandleFunc("/api/user/login", controllers.Authenticate).Methods("POST")
-	router.HandleFunc("/api/contacts/new", controllers.CreateContact).Methods("POST")
-	router.HandleFunc("/api/me/contacts", controllers.GetContactsFor).Methods("GET") //  user/2/contacts
+	router.HandleFunc("/api/register", controllers.CreateAccount).Methods("POST")
+	router.HandleFunc("/api/login", controllers.Authenticate).Methods("POST")
+	router.HandleFunc("/api/todos", controllers.CreateTodo).Methods("POST")
+	router.HandleFunc("/api/todos", controllers.GetTodosFor).Methods("GET")
+	router.HandleFunc("/api/todos/{id}", controllers.DeleteTodo).Methods("DELETE")
 
 	router.Use(app.JwtAuthentication) //attach JWT auth middleware
 
@@ -24,12 +25,12 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8000" //localhost
+		port = "8000"
 	}
 
 	fmt.Println(port)
 
-	err := http.ListenAndServe(":" + port, router) //Launch the app, visit localhost:8000/api
+	err := http.ListenAndServe(":" + port, router)
 	if err != nil {
 		fmt.Print(err)
 	}

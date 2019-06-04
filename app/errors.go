@@ -1,8 +1,8 @@
 package app
 
 import (
+	u "github.com/sotomskir/go-todos/utils"
 	"net/http"
-	u "go-contacts/utils"
 )
 
 var NotFoundHandler = func(next http.Handler) http.Handler {

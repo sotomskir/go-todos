@@ -1,21 +1,21 @@
 package app
 
 import (
-	"net/http"
-	u "go-contacts/utils"
-	"strings"
-	"go-contacts/models"
-	jwt "github.com/dgrijalva/jwt-go"
-	"os"
 	"context"
 	"fmt"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/sotomskir/go-todos/models"
+	u "github.com/sotomskir/go-todos/utils"
+	"net/http"
+	"os"
+	"strings"
 )
 
 var JwtAuthentication = func(next http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		notAuth := []string{"/api/user/new", "/api/user/login"} //List of endpoints that doesn't require auth
+		notAuth := []string{"/api/register", "/api/login"} //List of endpoints that doesn't require auth
 		requestPath := r.URL.Path //current request path
 
 		//check if request does not need authentication, serve the request if it doesn't need it
@@ -51,7 +51,7 @@ var JwtAuthentication = func(next http.Handler) http.Handler {
 		tk := &models.Token{}
 
 		token, err := jwt.ParseWithClaims(tokenPart, tk, func(token *jwt.Token) (interface{}, error) {
-			return []byte(os.Getenv("token_password")), nil
+			return []byte(os.Getenv("TOKEN_PASSWORD")), nil
 		})
 
 		if err != nil { //Malformed token, returns with http code 403 as usual

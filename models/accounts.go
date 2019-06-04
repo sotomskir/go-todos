@@ -2,11 +2,11 @@ package models
 
 import (
 	"github.com/dgrijalva/jwt-go"
-	u "go-contacts/utils"
-	"strings"
 	"github.com/jinzhu/gorm"
-	"os"
+	u "github.com/sotomskir/go-todos/utils"
 	"golang.org/x/crypto/bcrypt"
+	"os"
+	"strings"
 )
 
 /*
@@ -69,13 +69,13 @@ func (account *Account) Create() (map[string] interface{}) {
 	//Create new JWT token for the newly registered account
 	tk := &Token{UserId: account.ID}
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
-	tokenString, _ := token.SignedString([]byte(os.Getenv("token_password")))
+	tokenString, _ := token.SignedString([]byte(os.Getenv("TOKEN_PASSWORD")))
 	account.Token = tokenString
 
 	account.Password = "" //delete password
 
 	response := u.Message(true, "Account has been created")
-	response["account"] = account
+	response["data"] = account
 	return response
 }
 
@@ -100,11 +100,11 @@ func Login(email, password string) (map[string]interface{}) {
 	//Create JWT token
 	tk := &Token{UserId: account.ID}
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
-	tokenString, _ := token.SignedString([]byte(os.Getenv("token_password")))
+	tokenString, _ := token.SignedString([]byte(os.Getenv("TOKEN_PASSWORD")))
 	account.Token = tokenString //Store the token in the response
 
 	resp := u.Message(true, "Logged In")
-	resp["account"] = account
+	resp["data"] = account
 	return resp
 }
 

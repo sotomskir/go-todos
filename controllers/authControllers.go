@@ -1,10 +1,10 @@
 package controllers
 
 import (
-	"net/http"
-	u "go-contacts/utils"
-	"go-contacts/models"
 	"encoding/json"
+	"github.com/sotomskir/go-todos/models"
+	u "github.com/sotomskir/go-todos/utils"
+	"net/http"
 )
 
 var CreateAccount = func(w http.ResponseWriter, r *http.Request) {

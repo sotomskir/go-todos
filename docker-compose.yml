@@ -1,0 +1,47 @@
+version: "3"
+services:
+
+  db:
+    image: postgres:9.6
+    ports:
+    - 5432:5432
+    volumes:
+    - dbdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: gotodos
+
+  api:
+    image: sotomski/go-todos
+    build: .
+    environment:
+      DB_NAME: gotodos
+      DB_PASS: postgres
+      DB_USER: postgres
+      DB_TYPE: postgres
+      DB_HOST: db
+    labels:
+    - "traefik.enable=true"
+    - "traefik.port=8000"
+    - "traefik.frontend.rule=PathPrefix:/api"
+
+  front:
+    image: sotomski/ng-todos
+    ports:
+      - 8888:80
+    labels:
+    - "traefik.enable=true"
+    - "traefik.port=80"
+    - "traefik.frontend.rule=PathPrefix:/"
+
+  traefik:
+    image: traefik:1.7
+    ports:
+    - "80:80"
+    - "443:443"
+    - "8080:8080"
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: --web --docker
+
+volumes:
+  dbdata:
