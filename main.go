@@ -13,6 +13,7 @@ func main() {
 
 	router := mux.NewRouter()
 
+	router.HandleFunc("/api/status", controllers.Status).Methods("GET")
 	router.HandleFunc("/api/register", controllers.CreateAccount).Methods("POST")
 	router.HandleFunc("/api/login", controllers.Authenticate).Methods("POST")
 	router.HandleFunc("/api/todos", controllers.CreateTodo).Methods("POST")
